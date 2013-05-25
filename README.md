@@ -37,6 +37,8 @@ are used for configuration common across all instances of an application such as
 and defaults.
 
 ```ini
+# .metactl - application defaults
+
 [env]
 JOB_MANAGER_PORT = 9000
 
