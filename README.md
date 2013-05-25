@@ -78,3 +78,17 @@ the individual server.
 # change port because 9000 is already taken on this server
 JOB_MANAGER_PORT = 9001
 ```
+
+Implementation thoughts
+-----------------------
+
+### Language
+
+The original tool was written in a combination of bash and Perl in order to support
+Solaris 9. We'll drop Solaris 9 support and instead set a baseline of Solaris 10 and
+RHEL 5. That gives us four choices: bash, C, Perl, Python.
+
+Metactl is going to have more sophisticated configuration and coordination which will
+be hard to maintain in bash. C would not be a bad choice but managed language makes
+implementation a bit faster.  Current plan is to go with Python as it has good error
+handling and I know it better than Perl.
