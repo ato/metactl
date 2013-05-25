@@ -26,19 +26,15 @@ Features under consideration for metactl:
 Configuration
 -------------
 
-For each application Metactl has four layers of configuration:
+For each application Metactl has three layers of configuration.
 
-* app defaults
-* site defaults
-* per instance
+### Application defaults
 
 The application defaults are checked into version control in a top-level file `.metactl`. They
 are used for configuration common across all instances of an application such as entry points
 and defaults.
 
 ```ini
-# .metactl - application defaults
-
 [env]
 JOB_MANAGER_PORT = 9000
 
@@ -56,3 +52,4 @@ daily housekeeping = 5 0 * * * curl http://localhost/housekeeping
 harvest data on mondays = 10 0 * * 1 java -jar harvest.jar
 ```
 
+### Site defaults
