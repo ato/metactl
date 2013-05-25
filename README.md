@@ -30,9 +30,9 @@ For each application Metactl has three layers of configuration.
 
 ### Application defaults
 
-The application defaults are checked into version control in a top-level file `.metactl`. They
-are used for configuration common across all instances of an application such as entry points
-and defaults.
+A per-app config file is checked into version control as `.metactl`. It is used for 
+configuration common across all instances of an application such as entry points
+and universal defaults.
 
 ```ini
 [env]
@@ -52,4 +52,29 @@ daily housekeeping = 5 0 * * * curl http://localhost/housekeeping
 harvest data on mondays = 10 0 * * 1 java -jar harvest.jar
 ```
 
-### Site defaults
+### Site configuration
+
+Site configuration overrides app defaults for a particular deployment environment
+(devel, test, production etc). It lives in some central location that's yet to be
+decided.
+
+```ini
+[env]
+DB_URL = mysql://myapp:secret@mysql-prod.example.org/myapp
+
+[build]
+repo = svn://svn.example.org/myapp
+tag = 1.2.3
+```
+
+### Node configuration
+
+Node configuration overrides site configuration for a particular deployed instance
+of an app on a particular server. It lives in `/etc/metactl/nodes/myapp.conf` on
+the individual server.
+
+```ini
+[env]
+# change port because 9000 is already taken on this server
+JOB_MANAGER_PORT = 9001
+```
