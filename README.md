@@ -46,7 +46,7 @@ jvm.heap.max = 256m
 
 [daemon.jobmanager]
 platform = jvm
-command = -jar jobmanager.jar %(JOB_MANAGER_PORT)
+jvm.jar = jobmanager.jar %(JOB_MANAGER_PORT)
 jvm.heap.max = 128m
 
 [crontab]
