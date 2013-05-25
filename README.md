@@ -22,3 +22,35 @@ Features under consideration for metactl:
 * Configuration inheritance (per-app, per-site, per-server)
 * Optional per-app IP and DNS addresses for debugging and discovery
 * Lightweight sandboxing (using containers/zones)
+
+Configuration
+-------------
+
+For each application Metactl has four layers of configuration:
+
+* app defaults
+* site defaults
+* per instance
+
+The application defaults are checked into version control in a top-level file `.metactl`. They
+are used for configuration common across all instances of an application such as entry points
+and defaults.
+
+```ini
+[env]
+JOB_MANAGER_PORT = 9000
+
+[daemon.webapp]
+platform = jetty6
+jvm.heap.max = 256m
+
+[daemon.jobmanager]
+platform = jvm
+command = -jar jobmanager.jar %(JOB_MANAGER_PORT)
+jvm.heap.max = 128m
+
+[crontab]
+daily housekeeping = 5 0 * * * curl http://localhost/housekeeping
+harvest data on mondays = 10 0 * * 1 java -jar harvest.jar
+```
+
