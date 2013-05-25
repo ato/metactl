@@ -26,7 +26,7 @@ Features under consideration for metactl:
 Configuration
 -------------
 
-For each application Metactl has three layers of configuration.
+Metactl has four layers of configuration that are merged together for each instance.
 
 ### Application defaults
 
