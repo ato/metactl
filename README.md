@@ -1,7 +1,7 @@
 metactl
 =======
 
-**Status:** Nothing to see here yet.
+**Status:** Just design notes so far.
 
 Metactl is an experimental next-generation version of a service lifecycle management script I wrote for work.
 
@@ -194,14 +194,10 @@ use `tcpdump host myapp.server1.prod.example.org`.
 
 Mysql processlist:
 
-    ```
     | 706872616 | mydb | myapp.server1.prod.example.org:56839 | mydb | Sleep | 55 |
-    ```
 
 Add a firewall rule so the app can only talk to the production mysql server, the 10.1.1.0/24 subnet and nothing else?
 
-    ````
     xterm2 / $ iptables -A FORWARD -i pid24749 -d mysql.example.org -p tcp --dport 3306 -j ACCEPT
     xterm2 / $ iptables -A FORWARD -i pid24749 -d 10.1.1.0/24 -j ACCEPT
     xterm2 / $ iptables -A FORWARD -i pid24749 -j REJECT
-    ```
