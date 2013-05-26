@@ -164,3 +164,13 @@ Now let's configure the child's end of the link:
     64 bytes from 192.168.0.1: icmp_seq=1 ttl=64 time=0.122 ms
     64 bytes from 192.168.0.1: icmp_seq=2 ttl=64 time=0.113 ms
     ...
+
+To link it to the physical network we can either create a bridge (layer 2) or route (layer 3).  
+We'll pick routing as it's a bit less invasive to the host and let's us put in firewall and 
+routing rules to control what the child can access.
+
+To do so we enable IP forwarding and ARP proxying between the physical network and virtual device:
+
+    xterm2 / $ sysctl -w net.ipv4.ip_forward=1
+    xterm2 / $ sysctl -w net.ipv4.conf.eth0.proxy_arp=1
+    xterm2 / $ sysctl -w net.ipv4.conf.pid24749.proxy_arp=1
