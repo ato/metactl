@@ -92,11 +92,13 @@ wasteful and makes system administration harder. SELinux is just notoriously com
 
 There are two ideas here:
 
-* limit what network resources and application can access
+* limit what network resources an application can access; to
+  * limit damage from security vulnerabilities
+  * prevent misconfiguration (prod apps pointing at devel databases etc)
 * give the application its own IP address; so that
-    - it can listen on whatever port it likes
-    - developers can access it with nice names
-    - sysadmins can see nice meaningful names in netstat, tcpdump, mysql and so on
+  * it can listen on whatever port it likes
+  * developers can access it with nice names
+  * sysadmins can see nice meaningful names in netstat, tcpdump, mysql and so on
 
 #### Under the hood with Linux network namespaces
 
