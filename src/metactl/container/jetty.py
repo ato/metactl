@@ -11,6 +11,10 @@ def jetty_home(section):
         section['java.jar'] = '${jetty.home}/start.jar'
 
 def jetty_properties(section):
+    if 'http.port' not in section:
+        section['http.port'] = '8080'
+    if 'jetty.port' not in section:
+        section['jetty.port'] = '${http.port}'
     if 'jetty.properties' not in section:
         properties = {}
         for key in ['jetty.port','jetty.home']:
