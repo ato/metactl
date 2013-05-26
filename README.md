@@ -111,6 +111,11 @@ wasteful and makes system administration harder. SELinux is just notoriously com
 
 #### Network namespaces
 
+[Network namespaces](https://lwn.net/Articles/219794/) are useful for sandboxing network
+access.
+
+##### Under the hood
+
 Let's start off by running bash in a new network namespace using `unshare`.  Notice how 
 all the network interfaces disappear:
 
@@ -204,7 +209,9 @@ Add a firewall rule so the app can only talk to the production mysql server, the
     xterm2 / $ iptables -A FORWARD -i pid24749 -d 10.1.1.0/24 -j ACCEPT
     xterm2 / $ iptables -A FORWARD -i pid24749 -j REJECT
 
-Integrated into metactl it might look like the following. In the app defaults:
+#### Metactl network sandboxing
+
+Integrated into metactl they might look like the following. In the app defaults:
 
 ```ini
 [webapp]
@@ -232,3 +239,11 @@ In the local configration:
 [sandbox.net]
 ip = 192.168.0.5
 ```
+
+Metactl might provide a helper command for easily running tcpdump on a particular app:
+
+    metactl myapp tcpdump port 3306
+
+which would just run:
+
+    tcpdump -i pid24749 port 3306
