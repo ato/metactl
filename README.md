@@ -130,8 +130,8 @@ all the network interfaces disappear:
     xterm1 / $ echo $$
     24749
 
-In another terminal (which is still in the parent namespace) let's create a network link
-between the parent and child. We'll name the parent's end of the link pid24749 so we know
+In another terminal (which is still in the parent namespace) let's create a virtual ethernet
+link between the parent and child. We'll name the parent's end of the link pid24749 so we know
 which process it's linked to.  We'll also add a static route for 192.168.0.5 which will be
 the child's IP address.
 
