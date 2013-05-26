@@ -1,4 +1,5 @@
-import ConfigParser, os
+import os
+from configparser import ConfigParser, ExtendedInterpolation
 
 processors = []
 
@@ -7,7 +8,7 @@ def local_file(app):
     return '/tmp/' + app + '.conf'
 
 def parse_config(app):
-    config = ConfigParser.SafeConfigParser()
+    config = ConfigParser(interpolation=ExtendedInterpolation())
     config.read(local_file(app))
     for processor in processors:
         processor(config)
