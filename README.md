@@ -23,6 +23,33 @@ Features under consideration for metactl:
 * Optional per-app IP and DNS addresses for debugging and discovery
 * Lightweight sandboxing (using containers/zones)
 
+Design Philosophy
+-----------------
+
+### Incremental complexity
+
+You shouldn't need to pay for features you don't want. If you've just got a single
+machine to manage you should be able to do it without thinking about metactl's
+distributed features. If you don't want sandboxing you shouldn't have to deal with
+it.
+
+### Team player
+
+Metactl should make use of platform tools when they're available. Shell out to
+`less`, don't invent your own log viewer. Use the platform's service manager 
+(eg SMF) when it supports the features you need.  Only extend/replace it if
+it doesn't or the implementation is poor.
+
+### Transparency
+
+It should be obvious how a feature works under the hood to a practioner of the art. 
+Where it's not posisble to be obvious such as when the subject is obscure then it 
+should be clearly documented.
+
+This goal needs to be carefully balanced with ease of use. You don't have to fully
+understand the engine in order to drive, but you do need a high level mental model
+of how the ignition, gears, fuel, brakes and wheels interoperate.
+
 Configuration
 -------------
 
