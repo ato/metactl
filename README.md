@@ -85,10 +85,18 @@ Implementation thoughts
 ### Language
 
 I wrote the original tool in a combination of bash and Perl in order to support 
-Solaris 9. For metactl I'll instead set a baseline of Solaris 10 and RHEL 5. That 
+Solaris 9 easily. For metactl I'll instead set a baseline of Solaris 10 and RHEL 5. That 
 gives us four choices: bash, C, Perl, Python.
 
 Metactl is going to have more sophisticated configuration and coordination which will
 be hard to maintain in bash. C would not be a bad choice but a managed language would
 allow for rapid implementation and experimentation.  My current plan is to go with 
-Python as it has good error handling and I'm more fluent in it than Perl.
+Python as it has good error handling and I'm more fluent in it than in Perl.
+
+### Distributed coordination/configuration
+
+I'm tempted to use [Zookeeper](https://zookeeper.apache.org/) since we're going to
+be running it anyway for Solr, a relatively simple model, no single point of failure 
+and bindings for most languages.
+
+Another option is [Mcollective](https://puppetlabs.com/mcollective/introduction/).
