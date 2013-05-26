@@ -18,13 +18,26 @@ def interpolate(c):
             out[section][key] = value
     return out
 
-def config_show(ctx):
+def print_section(c, section):
+    if ':' in section:
+        section, item = section.split(':', 2)
+        print (c.get(section,item,raw=True))
+    else:
+        for item, value in c.items(section, raw=True):
+            print item, '=', value
+
+def show_config(ctx):
     c = ctx.config
     if ctx.args.interpolate:
         c = interpolate(c)
-    c.write(sys.stdout)
+    if ctx.args.section:
+        for section in ctx.args.section:
+            print_section(c, section)
+    else:
+        c.write(sys.stdout)
 
 parser = cli.subparsers.add_parser('show', help='print configuration')
-parser.set_defaults(func=config_show)
+parser.set_defaults(func=show_config)
 parser.add_argument('-i', '--interpolate', action='store_true',
-                    help='perform ${section:option} interpolation before printing')
+                    help='perform ${section:item} interpolation before printing')
+parser.add_argument('section', nargs='*', help='print a particular section or section:item')
