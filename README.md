@@ -10,7 +10,7 @@ Features I want to keep from the original:
 * Friendly CLI
 * Good Java/Jetty integration
 * SCM-based deployments
-* Both Solaris and Linux support
+* Target one release back (RHEL 5 and Solaris 10) with progressive enhancements on the latest version
 * Integration with OS service manager (SMF, Upstart, Systemd)
 
 Features under consideration for metactl:
@@ -35,10 +35,10 @@ it.
 
 ### Team player
 
-Metactl should make use of platform tools when they're available. Shell out to
-`less`, don't invent your own log viewer. Use the platform's service manager 
-(eg SMF) when it supports the features you need.  Only extend/replace it if
-it doesn't or the implementation is poor.
+Make use of platform tools when they're available. Shell out to `less`, don't invent 
+your own log viewer. Use the platform's service manager (eg SMF) when it supports 
+the features you need.  Only extend/replace it if it doesn't or the implementation
+or it would mean adding a painful external dependency.
 
 ### Transparency
 
