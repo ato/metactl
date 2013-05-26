@@ -208,7 +208,7 @@ TODO
 Integrated into metactl they might look like the following. In the app defaults:
 
 ```ini
-[webapp]
+[daemon.webapp]
 container = jetty8
 jvm.heap.max = 256m
 
