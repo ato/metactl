@@ -1,3 +1,6 @@
+processors = []
+defaults = {}
+
 # general commands
 import metactl.edit
 import metactl.daemon

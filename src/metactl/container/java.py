@@ -1,13 +1,5 @@
 import metactl.config
 
-def java_options(config, section):
-    options = []
-    if config.has_option(section, 'java.heap.max'):
-        options += ['-Xmx%(java.heap.max)']
-    if config.has_option(section, 'java.heap.min'):
-        options += ['-Xms%(java.heap.min)']
-    config.set(section, 'java.options')
-
 def java_home(section):
     if 'java.java' not in section:
         if 'java.home' in section:
@@ -16,7 +8,7 @@ def java_home(section):
             section['java.java'] = 'java'
 
 def java_command(section):
-    command = ['${java.java}']
+    command = ['${java.java}', '-Dmetactl.app=${metactl:app}']
     if 'java.heap.max' in section:
         command += ['-Xmx' + '${java.heap.max}']
     if 'java.heap.min' in section:
@@ -25,6 +17,10 @@ def java_command(section):
         command += ['-cp', '${java.classpath}']
     if 'java.options' in section:
         command += ['${java.options}']
+    if 'java.properties' in section:
+        command += ['${java.properties}']
+    if 'app.properties' in section:
+        command += ['${app.properties}']
     if 'java.main' in section:
         command += ['${java.main}']
     if 'java.jar' in section:
@@ -46,4 +42,4 @@ def java_config(config):
             if config[section].get('container','none') == 'java':
                 java_section(config[section])
 
-metactl.config.processors.append(java_config)
+metactl.processors.append(java_config)
