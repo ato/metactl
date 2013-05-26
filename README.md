@@ -94,9 +94,9 @@ There are two ideas here:
 
 * limit what network resources and application can access
 * give the application its own IP address; so that
-** it can listen on whatever port it likes
-** developers can access it with nice names
-** sysadmins can see nice names in netstat, tcpdump, mysql and so on
+    - it can listen on whatever port it likes
+    - developers can access it with nice names
+    - sysadmins can see nice meaningful names in netstat, tcpdump, mysql and so on
 
 #### Under the hood with Linux network namespaces
 
