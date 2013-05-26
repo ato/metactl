@@ -100,3 +100,67 @@ be running it anyway for Solr, a relatively simple model, no single point of fai
 and bindings for most languages.
 
 Another option is [Mcollective](https://puppetlabs.com/mcollective/introduction/).
+
+### Linux Containers
+
+Something I've wanted to explore for a while now is a simple sandboxing mechanism to
+manage resources, prevent applications from having surprise dependencies on shared
+filesystems and to limit damage in the event of a break in. Other attempts to achieve
+this I've seen are to use a one-app-per-VM model or SELinux. One-app-per-VM is resource
+wasteful and makes system administration harder. SELinux is just notoriously complicated.
+
+#### Network namespaces
+
+Let's start off by running bash in a new network namespace using `unshare`.  Notice how 
+all the network interfaces disappear:
+
+    xterm1 / $ ip addr
+    # ip addr
+    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN 
+        link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+        inet 127.0.0.1/8 scope host lo
+    2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
+        link/ether 12:34:45:67:89:01 brd ff:ff:ff:ff:ff:ff
+        inet 192.168.0.1/24 brd 192.168.0.255 scope global eth0
+    xterm1 / $ unshare --net bash
+    xterm1 / $ ip addr
+    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN 
+        link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+        inet 127.0.0.1/8 scope host lo
+    xterm1 / $ echo $$
+    24749
+
+In another terminal (which is still in the parent namespace) let's create a network link
+between the parent and child. We'll name the parent's end of the link pid24749 so we know
+which process it's linked to.  We'll also add a static route for 192.168.0.5 which will be
+the child's IP address.
+
+    xterm2 / $ ip link add pid24749 type veth peer name veth0 netns 24749
+    xterm2 / $ ip link set pid24749 up
+    xterm2 / $ ip route add 192.168.0.5/32 dev pid24749
+    xterm2 / $ ip addr
+    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN 
+        link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+        inet 127.0.0.1/8 scope host lo
+    2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
+        link/ether 12:34:45:67:89:01 brd ff:ff:ff:ff:ff:ff
+        inet 192.168.0.1/24 brd 192.168.0.255 scope global eth0
+    3: pid24749: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast state DOWN qlen 1000
+        link/ether ea:d7:39:fb:e1:b4 brd ff:ff:ff:ff:ff:ff
+
+Now let's configure the child's end of the link:
+
+    xterm1 / $ ip link set veth0 up
+    xterm1 / $ ip addr add 192.168.0.5/32 dev veth0
+    xterm1 / $ ip route add default dev veth0
+    xterm1 / $ ip addr
+    1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN 
+        link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    2: veth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+        link/ether 66:39:e6:bb:02:c3 brd ff:ff:ff:ff:ff:ff
+        inet 192.168.0.5/32 scope global veth0
+    xterm1 / $ ping 192.168.0.1
+    PING 192.168.0.1 (192.168.0.1) 56(84) bytes of data.
+    64 bytes from 192.168.0.1: icmp_seq=1 ttl=64 time=0.122 ms
+    64 bytes from 192.168.0.1: icmp_seq=2 ttl=64 time=0.113 ms
+    ...
