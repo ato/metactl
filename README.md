@@ -131,9 +131,11 @@ all the network interfaces disappear:
     24749
 
 In another terminal (which is still in the parent namespace) let's create a virtual ethernet
-link between the parent and child. We'll name the parent's end of the link pid24749 so we know
-which process it's linked to.  We'll also add a static route for 192.168.0.5 which will be
-the child's IP address.
+link between the parent and child. When the child process exits this link and all it's
+associated  devices, routes and firewall rules will be automatically cleaned up by the kernel.
+
+We'll name the parent's end of the link pid24749 so we know which process it's linked to.  
+We'll also add a static route for 192.168.0.5 which will be the child's IP address.
 
     xterm2 / $ ip link add pid24749 type veth peer name veth0 netns 24749
     xterm2 / $ ip link set pid24749 up
