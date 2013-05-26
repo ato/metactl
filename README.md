@@ -38,7 +38,7 @@ it.
 Make use of platform tools when they're available. Shell out to `less`, don't invent 
 your own log viewer. Use the platform's service manager (eg SMF) when it supports 
 the features you need.  Only extend/replace it if it doesn't or the implementation
-or it would mean adding a painful external dependency.
+is very poor or if it would mean adding an invasive external dependency.
 
 ### Transparency
 
