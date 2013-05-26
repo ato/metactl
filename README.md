@@ -67,9 +67,9 @@ repo = svn://svn.example.org/myapp
 tag = 1.2.3
 ```
 
-### Node configuration
+### Local configuration
 
-Node configuration overrides site configuration for a particular deployed instance
+Local configuration overrides site configuration for a particular deployed instance
 of an app on a particular server. It lives in `/etc/metactl/nodes/myapp.conf` on
 the individual server.
 
@@ -201,3 +201,32 @@ Add a firewall rule so the app can only talk to the production mysql server, the
     xterm2 / $ iptables -A FORWARD -i pid24749 -d mysql.example.org -p tcp --dport 3306 -j ACCEPT
     xterm2 / $ iptables -A FORWARD -i pid24749 -d 10.1.1.0/24 -j ACCEPT
     xterm2 / $ iptables -A FORWARD -i pid24749 -j REJECT
+
+Integrated into metactl it might look like the following. In the app defaults:
+
+```ini
+[webapp]
+container = jetty8
+jvm.heap.max = 256m
+
+[firewall.out]
+policy = reject
+
+[firewall.out.accept]
+database = %(DB_HOST):%(DB_PORT)
+testlan = 10.1.1.0/24
+```
+
+In the site configuration:
+
+```ini
+[env]
+DB_HOST = mysql.example.org
+DB_PORT = 3306
+```
+In the local configration:
+
+```ini
+[sandbox.net]
+ip = 192.168.0.5
+```
