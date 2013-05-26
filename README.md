@@ -166,11 +166,42 @@ Now let's configure the child's end of the link:
     ...
 
 To link it to the physical network we can either create a bridge (layer 2) or route (layer 3).  
-We'll pick routing as it's a bit less invasive to the host and let's us put in firewall and 
-routing rules to control what the child can access.
+We'll pick routing as it's a bit easier to setup and gives us some more flexibility.
 
 To do so we enable IP forwarding and ARP proxying between the physical network and virtual device:
 
     xterm2 / $ sysctl -w net.ipv4.ip_forward=1
     xterm2 / $ sysctl -w net.ipv4.conf.eth0.proxy_arp=1
     xterm2 / $ sysctl -w net.ipv4.conf.pid24749.proxy_arp=1
+
+We can now traceroute to the child from another server. Notice how the parent appears as a router
+hop.
+
+    box2 / $ traceroute 192.268.0.5
+    traceroute to 192.168.0.5 (192.168.0.5), 30 hops max, 60 byte packets
+    1  192.168.0.1  2.049 ms  4.055 ms  3.867 ms
+    2  192.168.0.5  1.972 ms  2.810 ms  5.043 ms
+
+Now suppose we put in DNS records:
+
+    box2 / $ traceroute myapp.prod.example.org
+    traceroute to myapp.prod.example.org (192.168.0.5), 30 hops max, 60 byte packets
+    1  myapp.server1.prod.example.org (192.168.0.1)  2.049 ms  4.055 ms  3.867 ms
+    2  server1.example.org (192.168.0.5)  1.972 ms  2.810 ms  5.043 ms
+
+Want to watch the network traffic just for that application? On the parent you can
+use `tcpdump host myapp.server1.prod.example.org`.
+
+Mysql processlist:
+
+    ```
+    | 706872616 | mydb | myapp.server1.prod.example.org:56839 | mydb | Sleep | 55 |
+    ```
+
+Add a firewall rule so the app can only talk to the production mysql server, the 10.1.1.0/24 subnet and nothing else?
+
+    ````
+    xterm2 / $ iptables -A FORWARD -i pid24749 -d mysql.example.org -p tcp --dport 3306 -j ACCEPT
+    xterm2 / $ iptables -A FORWARD -i pid24749 -d 10.1.1.0/24 -j ACCEPT
+    xterm2 / $ iptables -A FORWARD -i pid24749 -j REJECT
+    ```
