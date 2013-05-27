@@ -5,6 +5,18 @@ metactl
 
 Metactl is an experimental next-generation version of a service lifecycle management script I wrote for work.
 
+Building
+--------
+
+Later we'll have proper packaging.  For now you can grab dependencies and run it using:
+
+    ./bootstrap.py
+    ./bin/buildout
+    ./bin/metactl --help
+
+Features
+--------
+
 Features I want to keep from the original:
 
 * Friendly CLI
