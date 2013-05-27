@@ -21,6 +21,7 @@ def java_command(section):
         command += ['${java.properties}']
     if 'app.properties' in section:
         command += ['${app.properties}']
+    command += ['-Dvisualvm.display.name=${metactl:app}']
     if 'java.main' in section:
         command += ['${java.main}']
     if 'java.jar' in section:
