@@ -1,7 +1,7 @@
 metactl
 =======
 
-**Status:** Just design notes so far.
+**Status:** Mostly just design notes and a start on the CLI/config parser.
 
 Metactl is an experimental next-generation version of a service lifecycle management script I wrote for work.
 
