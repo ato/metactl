@@ -9,7 +9,7 @@ setup(
     package_dir = {'': 'src'},
     packages=find_packages('src'),
     include_package_data = True,
-    install_requires=['setuptools', 'configparser'],
+    install_requires=['setuptools', 'configparser', 'argparse'],
     zip_safe = False,
     entry_points={
         'console_scripts': ['metactl = metactl.main:run'],
